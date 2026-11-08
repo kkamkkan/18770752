@@ -67,6 +67,7 @@ html body,html body *{font-family:Paperlogy,system-ui,sans-serif!important}html 
 .video-library h2{margin:0 0 16px}.video-library fieldset{border:0;padding:0;margin:0 0 14px;min-width:0}.video-library legend{margin-bottom:8px;color:#e2c89b;font-weight:700}
 .video-options{display:flex;flex-wrap:wrap;gap:8px}.video-options button[aria-pressed="true"]{background:#c1a77a;color:#111820;font-weight:700}
 #materials-video{display:block;width:100%;max-height:72vh;margin:12px auto 0;background:#090e13;border-radius:8px}
+#materials-video.portrait{width:min(100%,40.5vh);aspect-ratio:9/16;object-fit:contain}
 #materials-video[hidden],#video-download[hidden]{display:none}
 #video-download{display:inline-block;margin-top:14px;padding:12px 16px;border-radius:8px}
 </style></head><body>
@@ -77,13 +78,16 @@ html body,html body *{font-family:Paperlogy,system-ui,sans-serif!important}html 
 <h2 id="video-title">영상자료 보기</h2>
 <fieldset><legend>59㎡ 타입</legend><div class="video-options">
 <button type="button" data-video="59-photo" aria-label="59㎡ 사진 슬라이드쇼" aria-pressed="false">사진 슬라이드쇼</button>
-<button type="button" data-video="59-film" aria-label="59㎡ 직접촬영영상" aria-pressed="false">직접촬영영상</button>
+<button type="button" data-video="59-film" data-src="media/59sqm-portrait.mp4" data-portrait aria-label="59㎡ 직접촬영영상" aria-pressed="false">직접촬영영상</button>
 </div></fieldset>
 <fieldset><legend>84㎡ 타입</legend><div class="video-options">
 <button type="button" data-video="84-photo" aria-label="84㎡ 사진 슬라이드쇼" aria-pressed="false">사진 슬라이드쇼</button>
-<button type="button" data-video="84-film" aria-label="84㎡ 직접촬영영상" aria-pressed="false">직접촬영영상</button>
+<button type="button" data-video="84-film" data-src="media/84sqm-portrait.mp4" data-portrait aria-label="84㎡ 직접촬영영상" aria-pressed="false">직접촬영영상</button>
 </div></fieldset>
-<fieldset><legend>홍보영상</legend><div class="video-options"><button type="button" data-video="promotion" aria-label="건물명 : 인시그니아 반포 홍보영상" aria-pressed="false">건물명 : 인시그니아 반포 홍보영상</button></div></fieldset>
+<fieldset><legend>홍보영상</legend><div class="video-options"><button type="button" data-video="promotion" aria-label="건물명 : 인시그니아 반포 홍보영상" aria-pressed="false">건물명 : 인시그니아 반포 홍보영상</button>
+<button type="button" data-video="slideshow" aria-label="자료 슬라이드쇼 영상" aria-pressed="false">자료 슬라이드쇼 영상</button>
+<button type="button" data-video="promotion-vertical" data-portrait aria-label="세로형 홍보영상" aria-pressed="false">세로형 홍보영상</button>
+</div></fieldset>
 <video id="materials-video" controls playsinline preload="none" hidden></video>
 <a id="video-download" class="download" download hidden>선택한 영상 다운로드</a>
 </section></main>
@@ -106,7 +110,8 @@ let touch=null;slide.addEventListener('touchstart',e=>{touch=e.touches.length===
     buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
     player.hidden = false;
     player.setAttribute('aria-label', button.getAttribute('aria-label'));
-    player.src = 'media/materials/' + button.dataset.video + '.mp4';
+    player.classList.toggle('portrait', button.hasAttribute('data-portrait'));
+    player.src = button.dataset.src || 'media/materials/' + button.dataset.video + '.mp4';
     download.href = player.src;
     download.download = button.getAttribute('aria-label').replace(': ', ' ') + '.mp4';
     download.hidden = false;
